@@ -1,0 +1,4 @@
+
+* updated 11/26/2016 for 1.8.x compat by Vintagedaddyo
+
+* 1.1 added option to display on portal

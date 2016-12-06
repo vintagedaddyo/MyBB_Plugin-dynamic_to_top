@@ -1,0 +1,9 @@
+Dynamic To Top
+Adds an automatic and dynamic "To Top" button to scroll long pages back to the top.
+Author: bomfile
+Submitted: 18th September 2010
+Adds an automatic and dynamic "To Top" button to scroll long pages back to the top.
+
+* updated 11/26/2016 for 1.8.x by Vintagedaddyo
+
+* 1.1 adds option to display on portal
