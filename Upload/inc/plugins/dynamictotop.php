@@ -8,7 +8,7 @@
  *
  * MyBB Version: 1.8
  *
- * Plugin Version: 1.1
+ * Plugin Version: 1.2
  * 
  */
 
@@ -27,15 +27,26 @@ $plugins->add_hook("showthread_start", "dynamictotop_start");
 // Plugin Info
 function dynamictotop_info()
 {
-    return array(
-        "name"        => "Dynamic To Top",
-        "description"    => "Adds an automatic and dynamic \"To Top\" button to scroll long pages back to the top.",
-        "website"    => "http://www.mybbdestek.com",
-        "author"    => "Bomfile & updated by vintagedaddyo",
-        "authorsite"    => "https://community.mybb.com/user-6029.html",
-        "version"    => "1.1",
-        "compatibility" => "18*",
-        "guid"        => "2ab170aa2a13c264db6c29397850b433",
+    global $lang;
+
+    $lang->load("dynamictotop");
+    
+    $lang->dynamictotop_Desc = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="float:right;">' .
+        '<input type="hidden" name="cmd" value="_s-xclick">' . 
+        '<input type="hidden" name="hosted_button_id" value="AZE6ZNZPBPVUL">' .
+        '<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">' .
+        '<img alt="" border="0" src="https://www.paypalobjects.com/pl_PL/i/scr/pixel.gif" width="1" height="1">' .
+        '</form>' . $lang->dynamictotop_Desc;
+
+    return Array(
+        'name' => $lang->dynamictotop_Name,
+        'description' => $lang->dynamictotop_Desc,
+        'website' => $lang->dynamictotop_Web,
+        'author' => $lang->dynamictotop_Auth,
+        'authorsite' => $lang->dynamictotop_AuthSite,
+        'version' => $lang->dynamictotop_Ver,
+        'codename' => $lang->dynamictotop_CodeName,
+        'compatibility' => $lang->dynamictotop_Compat
     );
 }
 
@@ -43,25 +54,80 @@ function dynamictotop_info()
 function dynamictotop_activate()
 {
  require MYBB_ROOT.'/inc/adminfunctions_templates.php';
- global $db, $mybb, $settings;
 
-     $settings_group = array(
-        'gid'          => 'NULL',
+ 
+ global $db, $mybb, $settings, $lang;
+
+    $lang->load("dynamictotop");
+
+
+     $dynamictotop_group = array(
+        'gid'          => '0',
         'name'         => 'dynamictotopgroup',
-        'title'        => 'Dynamic To Top',
-        'description'  => 'Dynamic To Top Settings.',
-        'disporder'    => '2',
-        'isdefault'    => 'no'
+        'title'        => $lang->dynamictotop_option_0_Title,
+        'description'  => $lang->dynamictotop_option_0_Description,
+        'disporder'    => '1',
+        'isdefault'    => '0'
     );
-    $db->insert_query('settinggroups', $settings_group);
-    $gid = $db->insert_id();
 
-    $settings1 = array('name' => 'pluginonoff','title' =>'Plugin On/Off ?','optionscode' => 'onoff','value' =>'1','disporder' => 1,'gid' => intval($gid));	
-	$settings2 = array('name' => 'indextotoponoff','title' =>'Show On Index?','optionscode' => 'onoff','value' =>'1','disporder' => 2,'gid' => intval($gid));
-	$settings3 = array('name' => 'forumtotoponoff','title' =>'Show On Forum Display?','optionscode' => 'onoff','value' =>'1','disporder' => 3,'gid' => intval($gid));
-	$settings4 = array('name' => 'showthreadtotoponoff','title' =>'Show On Thread Display?','optionscode' => 'onoff','value' =>'1','disporder' => 4,'gid' => intval($gid));
-    $settings5 = array('name' => 'scrollSpeed','title' =>'Scroll Speed ( miliseconds )','optionscode' => 'text','value' =>'1200','disporder' => 5,'gid' => intval($gid));
-    $settings6 = array('name' => 'easing','title' =>'Easing','optionscode'  => 'select
+   $db->insert_query('settinggroups', $dynamictotop_group);
+   $gid = $db->insert_id(); 
+
+    $dynamictotop_setting_1 = array(
+        'name' => 'pluginonoff',
+        'title' => $lang->dynamictotop_option_1_Title,
+        'description'  => $lang->dynamictotop_option_1_Description,
+        'optionscode' => 'onoff',
+        'value' => '1',
+        'disporder' => '1',
+        'gid' => intval($gid)
+    );
+
+	$dynamictotop_setting_2 = array(
+        'name' => 'indextotoponoff',
+        'title' => $lang->dynamictotop_option_2_Title,
+        'description'  => $lang->dynamictotop_option_2_Description,
+        'optionscode' => 'onoff',
+        'value' => '1',
+        'disporder' => '2',
+        'gid' => intval($gid)
+    );
+
+	$dynamictotop_setting_3 = array(
+        'name' => 'forumtotoponoff',
+        'title' => $lang->dynamictotop_option_3_Title,
+        'description'  => $lang->dynamictotop_option_3_Description,
+        'optionscode' => 'onoff',
+        'value' => '1' ,
+        'disporder' => '3',
+        'gid' => intval($gid)
+    );
+
+	$dynamictotop_setting_4 = array(
+        'name' => 'showthreadtotoponoff',
+        'title' => $lang->dynamictotop_option_4_Title,
+        'description'  => $lang->dynamictotop_option_4_Description,
+        'optionscode' => 'onoff',
+        'value' => '1' ,
+        'disporder' => '4',
+        'gid' => intval($gid)
+    );
+
+    $dynamictotop_setting_5 = array(
+        'name' => 'scrollSpeed',
+        'title' => $lang->dynamictotop_option_5_Title,
+        'description'  => $lang->dynamictotop_option_5_Description,
+        'optionscode' => 'text',
+        'value' => '1200',
+        'disporder' => '5',
+        'gid' => intval($gid)
+    );
+
+    $dynamictotop_setting_6 = array(
+        'name' => 'easing',
+        'title' => $lang->dynamictotop_option_6_Title,
+        'description'  => $lang->dynamictotop_option_6_Description,
+        'optionscode'  => 'select
 linear=linear
 easeInQuad=easeInQuad
 easeOutQuad=easeOutQuad
@@ -93,15 +159,31 @@ easeInOutBack=easeInOutBack
 easeInBounce=easeInBounce
 easeOutBounce=easeOutBounce
 easeInOutBounce=easeInOutBounce',
-'value' => 'linear','disporder' => 6,'gid' => intval($gid));
-$settings7 = array('name' => 'portaltotoponoff','title' =>'Show On Portal?','optionscode' => 'onoff','value' =>'1','disporder' => 7,'gid' => intval($gid));
-    $db->insert_query('settings',$settings1);
-    $db->insert_query('settings',$settings2);
-    $db->insert_query('settings',$settings3);
-	$db->insert_query('settings',$settings4);
-	$db->insert_query('settings',$settings5);
-	$db->insert_query('settings',$settings6);
-    $db->insert_query('settings',$settings7);
+        'value' => 'linear',
+        'disporder' => '6',
+        'gid' => intval($gid)
+    );
+
+$dynamictotop_setting_7 = array(
+    'name' => 'portaltotoponoff',
+    'title' => $lang->dynamictotop_option_7_Title,
+    'description'  => $lang->dynamictotop_option_7_Description,
+    'optionscode' => 'onoff',
+    'value' => '1',
+    'disporder' => '7',
+    'gid' => intval($gid)
+    );
+
+    $db->insert_query('settings',$dynamictotop_setting_1);
+    $db->insert_query('settings',$dynamictotop_setting_2);
+    $db->insert_query('settings',$dynamictotop_setting_3);
+	$db->insert_query('settings',$dynamictotop_setting_4);
+	$db->insert_query('settings',$dynamictotop_setting_5);
+	$db->insert_query('settings',$dynamictotop_setting_6);
+    $db->insert_query('settings',$dynamictotop_setting_7);
+
+
+
     rebuild_settings();
     
     $dynamictotop_template = array( 
@@ -127,7 +209,7 @@ $settings7 = array('name' => 'portaltotoponoff','title' =>'Show On Portal?','opt
 		});
 </script>",
 		       "sid"           => "-1",
-		       "version"	     => "1.1",
+		       "version"	     => "1.2",
 		       "dateline"	     => "1157735635",
 	); 
 
@@ -138,7 +220,9 @@ $settings7 = array('name' => 'portaltotoponoff','title' =>'Show On Portal?','opt
 function dynamictotop_deactivate()
 {
     require MYBB_ROOT.'/inc/adminfunctions_templates.php';
+
     global $db;
+
     $db->query("DELETE FROM ".TABLE_PREFIX."templates WHERE title='dynamictotop'");
     $db->query("DELETE FROM ".TABLE_PREFIX."settings WHERE name IN('pluginonoff', 'dynamictotopgroup')");
 	$db->query("DELETE FROM ".TABLE_PREFIX."settings WHERE name IN('indextotoponoff', 'dynamictotopgroup')");
@@ -148,6 +232,7 @@ function dynamictotop_deactivate()
     $db->query("DELETE FROM ".TABLE_PREFIX."settings WHERE name IN('scrollSpeed', 'dynamictotopgroup')");
 	$db->query("DELETE FROM ".TABLE_PREFIX."settings WHERE name IN('easing', 'dynamictotopgroup')");
     $db->query("DELETE FROM ".TABLE_PREFIX."settinggroups WHERE name='dynamictotopgroup'");
+
     rebuild_settings();
 }
 
